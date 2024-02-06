@@ -560,6 +560,13 @@ Parameters:
     Description: Optional - Customise the EC2 instance Name tag
     Default: ""
 
+  ExtraUserDataShellScript:
+    Type: String
+    Description: Optional - Schell script to run on EC2 instance startup, before installing the BuildKite agent.
+    Default: |
+      #!/bin/bash -v
+      echo ok
+
 Rules:
   HasToken:
     Assertions:
@@ -1255,6 +1262,9 @@ Resources:
                   BUILDKITE_ENABLE_INSTANCE_STORAGE="${EnableInstanceStorage}" \
                   BUILDKITE_MOUNT_TMPFS_AT_TMP="${MountTmpfsAtTmp}" \
                     /usr/local/bin/bk-mount-instance-storage.sh
+                  --==BOUNDARY==
+                  Content-Type: text/x-shellscript; charset="us-ascii"
+                  ${ExtraUserDataShellScript}
                   --==BOUNDARY==
                   Content-Type: text/x-shellscript; charset="us-ascii"
                   #!/bin/bash -v
